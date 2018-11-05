@@ -22,17 +22,20 @@ const posts = [{
     id: '123',
     title: 'title 1',
     body: 'body 1',
-    published: false
+    published: false,
+    author:'1'
 },{
     id: '1234',
     title: 'title 2',
     body: 'body 2',
-    published: false
+    published: false,
+    author:'1'
 },{
     id: '12345',
     title: 'title 3',
     body: 'body 3',
-    published: true
+    published: true,
+    author:'2'
 }]
 
 // scalar types - String, Boolean, Int, Float, ID
@@ -40,8 +43,8 @@ const posts = [{
 const typeDefs = `
     type Query {
         users(query: String): [User!]!
-        me: User!
         posts(query: String): [Post!]!
+        me: User!
         post: Post!
     }
 
@@ -57,6 +60,7 @@ const typeDefs = `
         title: String!
         body: String!
         published: Boolean!
+        author: User!
     }
 `
 
@@ -96,6 +100,15 @@ const resolvers = {
                 body: 'bodyy',
                 published: false
             }
+        }
+    },
+    // the function to identify the author
+    Post: {
+        author(parent, args, ctx, info) {
+            console.log(parent)
+            return users.find((user) => {
+                return user.id === parent.author
+            });
         }
     }
 }
