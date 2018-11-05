@@ -53,6 +53,7 @@ const typeDefs = `
         name: String!
         age: Int!
         email: String!
+        posts: [Post!]!
     }
 
     type Post {
@@ -105,10 +106,16 @@ const resolvers = {
     // the function to identify the author
     Post: {
         author(parent, args, ctx, info) {
-            console.log(parent)
             return users.find((user) => {
-                return user.id === parent.author
+                return user.id === parent.author // return data of posts in Query
             });
+        }
+    },
+    User: {
+        posts(parent, args, ctx, info) {
+            return posts.filter((post) => {
+                return post.author === parent.id // return data of users in Query
+            })
         }
     }
 }
