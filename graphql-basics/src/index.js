@@ -19,23 +19,45 @@ const users = [{
 }]
 
 const posts = [{
-    id: '123',
+    id: 'p1',
     title: 'title 1',
     body: 'body 1',
     published: false,
     author:'1'
 },{
-    id: '1234',
+    id: 'p2',
     title: 'title 2',
     body: 'body 2',
     published: false,
     author:'1'
 },{
-    id: '12345',
+    id: 'p3',
     title: 'title 3',
     body: 'body 3',
     published: true,
     author:'2'
+}]
+
+const comments = [{
+    id: 'c1',
+    text: 'text 1',
+    author:'1',
+    post:'p1'
+},{
+    id: 'c2',
+    text: 'text 2',
+    author:'2',
+    post:'p2'
+},{
+    id: 'c3',
+    text: 'text 3',
+    author:'3',
+    post:'p3'
+},{
+    id: 'c4',
+    text: 'text 4',
+    author:'1',
+    post:'p1'
 }]
 
 // scalar types - String, Boolean, Int, Float, ID
@@ -44,6 +66,7 @@ const typeDefs = `
     type Query {
         users(query: String): [User!]!
         posts(query: String): [Post!]!
+        comments(query: String): [Comment!]!
         me: User!
         post: Post!
     }
@@ -54,6 +77,7 @@ const typeDefs = `
         age: Int!
         email: String!
         posts: [Post!]!
+        comments: [Comment!]!
     }
 
     type Post {
@@ -62,6 +86,14 @@ const typeDefs = `
         body: String!
         published: Boolean!
         author: User!
+        comments: [Comment!]!
+    }
+
+    type Comment {
+        id: ID!
+        text: String!
+        author: User!
+        post: Post!
     }
 `
 
@@ -94,6 +126,9 @@ const resolvers = {
                 return post.title.toLowerCase().includes(args.query.toLowerCase()) || post.body.toLowerCase().includes(args.query.toLowerCase())
             });
         },
+        comments(parent, args, ctx, info){
+            return comments
+        },
         post() {
             return {
                 id:'3434',
@@ -109,6 +144,11 @@ const resolvers = {
             return users.find((user) => {
                 return user.id === parent.author // return data of posts in Query
             });
+        },
+        comments(parent, args, ctx, info) {
+            return comments.filter((comment) => {
+                return comment.post === parent.id // return data of users in Query
+            })
         }
     },
     User: {
@@ -116,6 +156,23 @@ const resolvers = {
             return posts.filter((post) => {
                 return post.author === parent.id // return data of users in Query
             })
+        },
+        comments(parent, args, ctx, info) {
+            return comments.filter((comment) => {
+                return comment.author === parent.id // return data of users in Query
+            })
+        }
+    },
+    Comment: {
+        author(parent, args, ctx, info) {
+            return users.find((user) => {
+                return user.id === parent.author // return data of comments in Query
+            }); 
+        },
+        post(parent, args, ctx, info) {
+            return posts.find((post) => {
+                return post.id === parent.post // // return data of comments in Query
+            }); 
         }
     }
 }
