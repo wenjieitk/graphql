@@ -1,6 +1,6 @@
 import {GraphQLServer} from 'graphql-yoga';
 
-// Demo User Data
+// Dummy Data
 const users = [{
     id: '1',
     name: 'Jie',
@@ -18,12 +18,30 @@ const users = [{
     age: 29
 }]
 
+const posts = [{
+    id: '123',
+    title: 'title 1',
+    body: 'body 1',
+    published: false
+},{
+    id: '1234',
+    title: 'title 2',
+    body: 'body 2',
+    published: false
+},{
+    id: '12345',
+    title: 'title 3',
+    body: 'body 3',
+    published: true
+}]
+
 // scalar types - String, Boolean, Int, Float, ID
 //type definitions (schema)
 const typeDefs = `
     type Query {
         users(query: String): [User!]!
         me: User!
+        posts(query: String): [Post!]!
         post: Post!
     }
 
@@ -62,11 +80,20 @@ const resolvers = {
                 age: 28
             }
         },
+        posts(parent, args, ctx, info){
+            if(!args.query) {
+                return posts
+            }
+
+            return posts.filter((post) => {
+                return post.title.toLowerCase().includes(args.query.toLowerCase()) || post.body.toLowerCase().includes(args.query.toLowerCase())
+            });
+        },
         post() {
             return {
-                id: '029',
-                title: 'graphql',
-                body: '',
+                id:'3434',
+                title: 'postt',
+                body: 'bodyy',
                 published: false
             }
         }
