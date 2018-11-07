@@ -74,6 +74,12 @@ const typeDefs = `
 
     type Mutation {
         createUser(name: String!, email: String!, age: Int): User!
+        createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
+        createComment(
+            text: String!
+            author: String!
+            post: String!
+        ): Comment!
     }
 
     type User {
@@ -164,6 +170,45 @@ const resolvers = {
             users.push(user);
 
             return user;
+        },
+
+        createPost(parent, args, ctx, info){
+            const userExists = users.some((user) => user.id === args.author)
+
+            if(!userExists){
+                throw new Error('user not found');
+            }
+
+            const post = {
+                id: uuid(),
+                title: args.body,
+                published: args.published,
+                body: args.body,
+                author: args.author
+            }
+
+            posts.push(post)
+
+            return post;
+        },
+
+        createComment(parent, args, ctx, info){
+            const userAndPostExist = users.some((user) => user.id === args.author) && posts.some((post) => post.id === args.post);
+
+            if(!userAndPostExist){
+                throw new Error('post or user not found');
+            }
+
+            const comment = {
+                id: uuid(),
+                text: args.text,
+                author: args.author,
+                post: args.post
+            }
+
+            comments.push(comment)
+
+            return comment;
         }
     },
 
