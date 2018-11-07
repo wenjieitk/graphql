@@ -72,16 +72,35 @@ const typeDefs = `
         post: Post!
     }
 
+    ### API
     type Mutation {
-        createUser(name: String!, email: String!, age: Int): User!
-        createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
-        createComment(
-            text: String!
-            author: String!
-            post: String!
-        ): Comment!
+        createUser(data: CreateUserInput): User!
+        createPost(data: CreatePostInput): Post!
+        createComment(data: CreateCommentInput): Comment!
     }
 
+    ### input schema
+    input CreateUserInput {
+        name: String!
+        email: String!
+        age: Int
+    }
+
+    input CreatePostInput {
+        title: String!, 
+        body: String!, 
+        published: Boolean!, 
+        author: ID!
+    }
+
+    input CreateCommentInput {
+        text: String!
+        author: String!
+        post: String!
+    }
+
+
+    ### data schema
     type User {
         id: ID!
         name: String!
@@ -152,55 +171,43 @@ const resolvers = {
 
     Mutation: {
         createUser(parent, args, ctx, info) {
-            const emailTaken = users.some((user) => {
-                return user.email === args.email
+            const emailTaken = users.find((user) => {
+                return user.email === args.data.email
             });
-
             if(emailTaken) {
                 throw new Error('Email is taken.')
             }
-
             const user = {
                 id: uuid(),
-                ...args
+                ...args.data
             }
-
             users.push(user);
-
             return user;
         },
 
         createPost(parent, args, ctx, info){
-            const userExists = users.some((user) => user.id === args.author)
-
+            const userExists = users.find((user) => user.id === args.data.author)
             if(!userExists){
                 throw new Error('user not found');
             }
-
             const post = {
                 id: uuid(),
-                ...args
+                ...args.data
             }
-
             posts.push(post)
-
             return post;
         },
 
         createComment(parent, args, ctx, info){
-            const userAndPostExist = users.some((user) => user.id === args.author) && posts.some((post) => post.id === args.post);
-
+            const userAndPostExist = users.find((user) => user.id === args.data.author) && posts.find((post) => post.id === args.data.post);
             if(!userAndPostExist){
                 throw new Error('post or user not found');
             }
-
             const comment = {
                 id: uuid(),
-                ...args
+                ...args.data
             }
-
             comments.push(comment)
-
             return comment;
         }
     },
