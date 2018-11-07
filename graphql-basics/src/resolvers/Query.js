@@ -25,8 +25,8 @@ const Query = {
             return post.title.toLowerCase().includes(args.query.toLowerCase()) || post.body.toLowerCase().includes(args.query.toLowerCase())
         });
     },
-    comments(parent, args, ctx, info){
-        return comments
+    comments(parent, args, {db}, info){
+        return db.comments
     },
     post() {
         return {

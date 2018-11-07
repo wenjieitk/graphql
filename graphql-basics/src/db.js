@@ -57,11 +57,11 @@ const comments = [{
     post:'p3'
 }]
 
-const db = [
+const db = {
     users,
     posts,
     comments
-]
+}
 
 export {
     db as default
