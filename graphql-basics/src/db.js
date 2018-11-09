@@ -19,13 +19,13 @@ const posts = [{
     id: 'p1',
     title: 'title 1',
     body: 'body 1',
-    published: false,
+    published: true,
     author:'1'
 },{
     id: 'p2',
     title: 'title 2',
     body: 'body 2',
-    published: false,
+    published: true,
     author:'2'
 },{
     id: 'p3',
