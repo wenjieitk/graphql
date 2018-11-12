@@ -4,3 +4,27 @@
 - "ssl: true" -> docker-compose.yml
 - docker-compose up -d
 - prisma deploy
+
+
+---- graphql query ----
+
+- connect and create
+mutation{
+  createComment(data:{
+    text:"this is comment two"
+    author:{
+      create:{
+        name:"jie jie",
+        email:"newnew@gmail.com"
+      }
+    }
+    post: {
+      connect:{
+        id:"cjoe1gc2c001y0961gpw6r5sc"
+      }
+    }
+  }){
+    id
+    text
+  }
+}
