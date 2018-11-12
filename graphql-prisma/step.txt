@@ -1,0 +1,6 @@
+- npm i prisma -g
+- prisma init <name>
+- cd prisma
+- "ssl: true" -> docker-compose.yml
+- docker-compose up -d
+- prisma deploy
