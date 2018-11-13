@@ -1,5 +1,5 @@
 const Query = {
-    users(parent, args, {db}, info){
+    users(parent, args, {db, prisma}, info){
         if(!args.query) {
             return db.users
         }
@@ -7,14 +7,6 @@ const Query = {
         return db.users.filter((user) => {
             return user.name.toLowerCase().includes(args.query.toLowerCase())
         });
-    },
-    me() {
-        return {
-            id: '123abc',
-            name: 'Jie',
-            email: 'test@gmail.com',
-            age: 28
-        }
     },
     posts(parent, args, {db}, info){
         if(!args.query) {
@@ -27,15 +19,7 @@ const Query = {
     },
     comments(parent, args, {db}, info){
         return db.comments
-    },
-    post() {
-        return {
-            id:'3434',
-            title: 'postt',
-            body: 'bodyy',
-            published: false
-        }
-    },
+    }
 }
 
 export {Query as default};
