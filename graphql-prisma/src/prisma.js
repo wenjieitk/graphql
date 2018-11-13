@@ -9,9 +9,13 @@ const prisma = new Prisma({
 //     console.log(JSON.stringify(data, undefined, 1))
 // })
 
+
+
 // prisma.query.comments(null, '{id text author{id name} post{id body author{email}}}').then((data) => {
 //     console.log(JSON.stringify(data, undefined, 1))
 // });
+
+
 
 // prisma.mutation.createPost({
 //     data:{
@@ -31,7 +35,24 @@ const prisma = new Prisma({
 //     console.log('usersssss\n' + JSON.stringify(data, undefined, 1))
 // });
 
+
+
+// prisma.exists.Comment({
+//     id:"cjoe2r0r5002k0961ggbnz7on",
+//     text: "this is comment one",
+//     author: {
+//         id:"cjoe145cs001o0961tzf0axad"
+//     }
+// }).then((exists) => {
+//     console.log(exists)
+// })
+
+
+
 const createPostForUser = async(authorId, data) => {
+    const userExists = await prisma.exists.User({id:authorId});
+    if(!userExists) throw new Error('User not found');
+
     const post = await prisma.mutation.createPost({
         data:{
             ...data,
@@ -41,15 +62,9 @@ const createPostForUser = async(authorId, data) => {
                 }
             }
         }
-    },'{id}');
+    },'{ author {name email posts {id title published body}}}');
 
-    const user = await prisma.query.user({
-        where: {
-            id: authorId
-        }
-    },'{id name email posts{id title published}}');
-
-    return user;
+    return post;
 }
 
 // createPostForUser('cjoe10xvo001d0961frr5tj8v',{
@@ -58,8 +73,9 @@ const createPostForUser = async(authorId, data) => {
 //     published: true
 // }).then((user) => {
 //     console.log(JSON.stringify(user, undefined, 1))
-// });
-
+// }).catch((error) => {
+//     console.error(error.message)
+// })
 
 
 
@@ -79,23 +95,23 @@ const createPostForUser = async(authorId, data) => {
 // });
 
 
+
 const updatePostForUser = async(postId, data) => {
+    const postExists = await prisma.exists.Post({id:postId});
+    if(!postExists) throw new Error('Post not found');
+
     const post = await prisma.mutation.updatePost({
         where: {
             id: postId
         },
         data
-    },'{author {id name}}');
-
-    const user = await prisma.query.user({
-        where:{
-            id: post.author.id
-        }
-    },'{id name email posts {id title body published}}')
+    },'{author {id name email posts {id title body published}}}');
     
-    return user
+    return post
 }
 
-updatePostForUser("cjoe1gc2c001y0961gpw6r5sc",{published: false,body:"update async", title:"updated async"}).then((user) => {
-    console.log(JSON.stringify(user, undefined, 1))
-})
+// updatePostForUser("cjof6p97f005009614kmt3oax",{published: false,body:"update async", title:"updated async"}).then((user) => {
+//     console.log(JSON.stringify(user, undefined, 1))
+// }).catch((error) => {
+//     console.error(error.message)
+// });
