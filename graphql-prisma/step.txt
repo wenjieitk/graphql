@@ -31,3 +31,6 @@ mutation{
 
 prisma-binding -> interact prisma with graphql
 graphql-cli -> to fetch the graphql schema from prisma and store it to local project
+
+@unique
+@relation - [CASCADE,SET_NULL]
