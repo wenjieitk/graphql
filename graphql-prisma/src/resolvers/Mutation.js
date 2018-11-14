@@ -41,6 +41,29 @@ const Mutation = {
         },info)
     },
 
+    async login(parent, args, {prisma}, info) {
+        const user = await prisma.query.user({
+            where: {
+                email: args.data.email
+            }
+        })
+
+        if(!user) 
+            throw new Error('Unable to login')
+
+        const isMatch = await bcrypt.compare(args.data.password, user.password)
+
+        if(!isMatch)
+            throw new Error('unable to login')
+
+        return {
+            user,
+            token: jwt.sign({
+                userId: user.id
+            },'mysecret')
+        }
+    },
+
     async createPost(parent, args, {prisma}, info){
         return prisma.mutation.createPost({
             data: {
