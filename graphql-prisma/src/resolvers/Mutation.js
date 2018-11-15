@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import getUserId from '../utils/getUserId';
-import { request } from 'https';
 
 const Mutation = {
 
@@ -97,7 +96,7 @@ const Mutation = {
         })
 
         if (!postExists)
-        throw new Error('unable to delete post')
+        throw new Error('unable to update post')
 
         return prisma.mutation.updatePost({
             where: {
