@@ -10,7 +10,7 @@ const Query = {
                     name_contains: args.query
                 },{
                     email_contains: args.query
-                }]//query:"@input"
+                }]
             }
         }
 
@@ -27,17 +27,40 @@ const Query = {
         })
     },
 
-    posts(parent, args, {prisma}, info){
-        const opArgs = {}
+    myPosts(parent, args, { prisma, request }, info) {
+        const userId = getUserId(request)
+        const opArgs = {
+            where : {
+                author: {
+                    id: userId
+                }
+            }
+        }
 
         if(args.query) {
-            opArgs.where = {
-                OR: [{
-                    title_contains: args.query
-                },{
-                    body_contains: args.query
-                }]//query:"@input"
+            opArgs.where.OR =[{
+                title_contains: args.query
+            },{
+                body_contains: args.query
+            }]
+        }
+
+        return prisma.query.posts(opArgs,info)
+    },
+    
+    posts(parent, args, {prisma}, info){
+        const opArgs = {
+            where: {
+                published: true
             }
+        }
+
+        if(args.query) {
+            opArgs.where.OR =[{
+                title_contains: args.query
+            },{
+                body_contains: args.query
+            }]
         }
 
         return prisma.query.posts(opArgs,info)
