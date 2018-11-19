@@ -1,14 +1,4 @@
 const Subscription = {
-    // count: {
-    //     subscribe(parent, args, {pubsub}, info) {
-    //         setTimeout(() => {
-    //             pubsub.publish('count', {count:1})
-    //         }, 1);
-
-    //         return pubsub.asyncIterator('count')
-    //     }
-    // },
-
     comment: {
         subscribe(parent, { postId }, {prisma}, info) {
             // return prisma.subscription.comment(null, info);
