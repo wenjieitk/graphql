@@ -14,21 +14,23 @@ const User = {
     //     }
     // }
 
+    // limit email to show only to login user
     email: {
-        fragment: `fragment userId on User {id}`,
+        fragment: `... based on User {id}`,
         resolve (parent, args, {request}, info) {
             const userid = getUserId(request, false)
         
             if(userid && userid === parent.id) {
                 return parent.email
-            }else{
+            }else {
                 return null
             }
         }
     },
 
+    // limit posts to show only published = true
     posts:{
-        fragment: 'fragment userId on User {id}',
+        fragment: '... based on User {id}',
         resolve (parent, args, {request}, info) {
             return prisma.query.posts({
                 where: {
