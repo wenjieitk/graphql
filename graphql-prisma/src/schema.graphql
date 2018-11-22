@@ -1,12 +1,17 @@
 # get data
 type Query {
-    users(query: String, first: Int, skip: Int): [User!]!
-    posts(query: String, first: Int, skip: Int): [Post!]!
-    myPosts(query: String, first: Int, skip: Int): [Post!]!
-    comments(query: String, first: Int, skip: Int): [Comment!]!
+    users(query: String, first: Int, skip: Int, after:String): [User!]!
+    posts(query: String, first: Int, skip: Int, after:String): [Post!]!
+    myPosts(query: String, first: Int, skip: Int, after:String): [Post!]!
+    comments(query: String, first: Int, skip: Int, after:String): [Comment!]!
     post(id: ID!): Post
     me: User!
 }
+## pagination
+ # first- limit how many data to user
+ # skip - skip data and show next set of data
+ # after(id) - query the data AFTER this specific data
+ # 
 
 # API
 type Mutation {

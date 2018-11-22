@@ -2,7 +2,11 @@ import getUserId from "../utils/getUserId";
 
 const Query = {
     users(parent, args, {prisma}, info){
-        const opArgs = {}
+        const opArgs = {
+            // first: args.first,
+            // skip: args.skip,
+            // after: args.after
+        }
 
         if(args.query) {
             opArgs.where = {
@@ -50,6 +54,9 @@ const Query = {
     
     posts(parent, args, {prisma}, info){
         const opArgs = {
+            // first: args.first,
+            // skip: args.skip,
+            // after: args.after,
             where: {
                 published: true
             }
@@ -101,8 +108,3 @@ const Query = {
 }
 
 export {Query as default};
-
-/** pagination
- * first- limit how many data to user
- * skip - skip data and show next set of data
- */
