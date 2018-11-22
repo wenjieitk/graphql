@@ -101,3 +101,8 @@ const Query = {
 }
 
 export {Query as default};
+
+/** pagination
+ * first- limit how many data to user
+ * skip - skip data and show next set of data
+ */
